@@ -1,4 +1,5 @@
 {
   "name": "Barbeiero",
-  "displayName": "Barbeiero"
+  "displayName": "Barbeiero",  
+  "icon": "./assets/icon.png"
 }
