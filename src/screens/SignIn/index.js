@@ -20,6 +20,7 @@ import SignInput from '../../components/SignInput';
 import BarberLogo from '../../assets/barber.svg';
 import EmailIcon from '../../assets/email.svg';
 import LockIcon from '../../assets/lock.svg';
+import Api from '../../Api';
 
 export default () => {
     const { dispatch: userDispatch } = useContext(UserContext);
