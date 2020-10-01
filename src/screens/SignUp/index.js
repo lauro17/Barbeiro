@@ -31,7 +31,26 @@ export default () => {
     const [passwordField, setPasswordField] = useState('');
     
     const handleSignClick = async () => {
-        if(emailField != '' && passwordField != '') {
+        if(nameField != '' && emailField != '' && passwordField != '') {
+            let res = await Api.signIn(nameField, emailField, passwordField);
+            if(res.token) {
+                await AsyncStorage.setItem('token', json.token);
+
+                userDispatch({
+                    type: 'setAvatar',
+                    payload:{
+                        avatar: json.data.avatar
+                    }
+                });
+                navigation.reset({
+                    routes:[{name:'MainTab'}]
+                });
+            } else {
+                alert("PreenchaError: " + res.error);
+            }
+            
+        } else {
+            alert('Preencha os campos');
         }
     }
     
@@ -52,7 +71,7 @@ export default () => {
         value={nameField}
         onChangeText={t=>setNameField(t)}
         />
-
+        
         <SignInput
         IconSvg={EmailIcon}
         placeholder="Digite seu e-mail"
