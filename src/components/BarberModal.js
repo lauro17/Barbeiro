@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import ExpandIcon from '../assets/expand.svg';
 import NavPrevIcon from '../assets/nav_prev.svg';
 import NavNexIcon from '../assets/nav_next.svg';
+import Api from '../Api';
 
 const Modal = styled.Modal``;
 
@@ -224,6 +225,7 @@ export default ({show, setShow, user, service}) => {
             }
 
         } 
+        setSelectedHour(null);
     }, [user, selectedDay]);
 
     useEffect(()=>{
@@ -234,13 +236,7 @@ export default ({show, setShow, user, service}) => {
 
 
     }, []);
-    
-    const handleCloseButton = () =>{
-        setShow(false);
-    }
-    const handleFinishClik = () =>{
-        
-    }
+ 
 
     //diminui a data
     const handleLeftDateClick = () =>{
@@ -257,7 +253,39 @@ export default ({show, setShow, user, service}) => {
         setSelectedMonth(mountDate.getMonth());
         setSelectedDay(0);
     }
-    
+       
+    const handleCloseButton = () =>{
+        setShow(false);
+    }
+    const handleFinishClik = async () =>{
+        if(
+            user.id &&
+            service != null &&
+            selectedYear > 0 &&
+            selectedMonth > 0 &&
+            selectedDay > 0 &&
+            selectedHour != null 
+        ){
+            let res = await Api.setAppointment(
+                user.id,
+                service,
+                selectedYear,
+                selectedMonth,
+                selectedDay,
+                selectedHour
+            );
+            if(res.error == ''){
+                setShow(false);
+                // ir para  atela de agendamento
+                navigation.navigate('Appointments');
+            }else{
+                alert(res.error);
+            }
+        }else{
+            alert("Preencha todos os dados");
+        }
+        
+    }
     return(
         <Modal
             transparent={true}
@@ -332,8 +360,17 @@ export default ({show, setShow, user, service}) => {
                                 <TimeItem
                                 key={key}
                                 onPress={()=>{setSelectedHour(item)}}
+                                 style={{
+                                    backgroundColor: item.number === selectedHour ? '#4EADBE' : '#FFFFFF'
+                                }}
                                 >
-                                    <TimeItemText>{item}</TimeItemText>
+                                    <TimeItemText
+                                    style={{
+                                        color: item.number === selectedHour ? '#FFFFFF' : '#000000',
+                                        fontWeight: item === selectedHour ? 'bold' : 'normal'
+                                  
+                                    }}
+                                    >{item}</TimeItemText>
 
                                 </TimeItem>
                             ))}
